@@ -47,7 +47,7 @@ def create_deal(title, person_id, pipeline_id, stage_id):
 
 def add_note(deal_id, email, sub_at, cc, cn, region):
     geo = f"<b>Location:</b> {cn or cc} ({region})<br>" if (cn or cc) else ""
-    content = f"<b>New Ghost Subscriber</b><br><b>Email:</b> {email}<br><b>Date:</b> {sub_at}<br>{geo}<b>Source:</b> Knowledge Base (Ghost Blog)<br><b>Pipeline:</b> {region}"
+    content = f"<b>New Knowledge Base Subscriber</b><br><b>Email:</b> {email}<br><b>Date:</b> {sub_at}<br>{geo}<b>Source:</b> Knowledge Base (Ghost Blog)<br><b>Pipeline:</b> {region}"
     requests.post(_pd("/notes"), json={"content": content, "deal_id": deal_id, "pinned_to_deal_flag": 1}, params=_params(), timeout=10)
 
 @app.route("/webhook/ghost-subscriber", methods=["POST"])
@@ -70,7 +70,7 @@ def ghost_subscriber():
     region = region_label(country_code)
     try:
         pid = create_person(name, email)
-        did = create_deal(f"Ghost Subscriber - {name or email} [{region}]", pid, pipeline_id, stage_id)
+        did = create_deal(f"Knowledge Base Subscriber - {name or email} [{region}]", pid, pipeline_id, stage_id)
         add_note(did, email, sub_at, country_code, country_name, region)
     except requests.HTTPError as e:
         return jsonify({"error": str(e)}), 502
