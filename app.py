@@ -53,7 +53,8 @@ def add_note(deal_id, email, sub_at, cc, cn, region):
 @app.route("/webhook/ghost-subscriber", methods=["POST"])
 def ghost_subscriber():
     data = request.get_json(silent=True) or {}
-    member = data.get("member", {}).get("current", {})
+    # Supporte member.added ET subscriber.added
+    member = (data.get("member") or data.get("subscriber") or {}).get("current", {})
     email = member.get("email", "").strip()
     name = member.get("name", "").strip()
     geo = member.get("geolocation") or {}
